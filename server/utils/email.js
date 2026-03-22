@@ -6,12 +6,14 @@ dotenv.config();
 // Use Resend HTTP API instead of SMTP — far more reliable from cloud platforms (Render)
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-const emailFrom = process.env.EMAIL_FROM || 'CollabNotes <onboarding@resend.dev>';
+// Strip any stray quotes that dotenv or Render may inject around the value
+const rawFrom = process.env.EMAIL_FROM || 'CollabNotes <onboarding@resend.dev>';
+const emailFrom = rawFrom.replace(/^["']|["']$/g, '').trim();
 
 if (!process.env.RESEND_API_KEY) {
   console.error('[Email] CRITICAL: RESEND_API_KEY is not set!');
 } else {
-  console.log('[Email] Resend API configured and ready');
+  console.log('[Email] Resend API configured, from:', emailFrom);
 }
 
 /**
