@@ -1,58 +1,43 @@
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-const emailConfig = {
-  host: process.env.EMAIL_HOST || 'smtp-relay.brevo.com',
-  port: Number(process.env.EMAIL_PORT) || 587,
-  secure: false,
-  requireTLS: true,
-  pool: true,
-  maxConnections: 3,
-  maxMessages: 100,
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 15000,
-  tls: {
-    rejectUnauthorized: false
-  },
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
-};
+// Use Resend HTTP API instead of SMTP — far more reliable from cloud platforms (Render)
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-if (!emailConfig.auth.user || !emailConfig.auth.pass) {
-  console.error('[Email] CRITICAL: EMAIL_USER or EMAIL_PASS is not set!');
+const emailFrom = process.env.EMAIL_FROM || 'CollabNotes <onboarding@resend.dev>';
+
+if (!process.env.RESEND_API_KEY) {
+  console.error('[Email] CRITICAL: RESEND_API_KEY is not set!');
+} else {
+  console.log('[Email] Resend API configured and ready');
 }
 
-const transporter = nodemailer.createTransport(emailConfig);
-
-transporter.verify()
-  .then(() => console.log('[Email] SMTP connection verified and ready'))
-  .catch(err => console.error('[Email] SMTP verification failed:', err.message));
-
 /**
- * Send email with retry logic (up to 2 retries with backoff)
+ * Send email via Resend HTTP API with retry logic
  */
 async function sendWithRetry(mailOptions, retries = 2) {
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
-      const info = await transporter.sendMail(mailOptions);
+      const { data, error } = await resend.emails.send(mailOptions);
+
+      if (error) {
+        throw new Error(error.message || JSON.stringify(error));
+      }
+
       console.log('[Email] Sent successfully:', {
         to: mailOptions.to,
         subject: mailOptions.subject,
-        messageId: info.messageId
+        id: data?.id
       });
-      return info;
+      return data;
     } catch (error) {
       console.error(`[Email] Attempt ${attempt + 1} failed:`, error.message);
       if (attempt === retries) {
         console.error('[Email] All retries exhausted for:', mailOptions.to);
         throw error;
       }
-      // Exponential backoff: 1s, 2s
       await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1)));
     }
   }
@@ -60,25 +45,21 @@ async function sendWithRetry(mailOptions, retries = 2) {
 
 /**
  * Fire-and-forget email sender — does NOT block the calling function.
- * Logs errors but never rejects back to the caller.
  */
 export function sendEmailAsync(sendFn, ...args) {
-  // Execute in background — caller does not await this
   sendFn(...args).catch(err => {
     console.error('[Email] Background send failed:', err.message);
   });
 }
-
-const emailFrom = process.env.EMAIL_FROM || 'CollabNotes <no-reply@collabnotes.com>';
 
 export async function sendShareNotification(toEmail, documentTitle, documentLink, sharedByName) {
   if (!toEmail || !documentLink || !sharedByName) {
     throw new Error('Invalid email parameters');
   }
 
-  const mailOptions = {
+  return sendWithRetry({
     from: emailFrom,
-    to: toEmail,
+    to: [toEmail],
     subject: `${sharedByName} shared "${documentTitle}" with you`,
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -93,9 +74,7 @@ export async function sendShareNotification(toEmail, documentTitle, documentLink
         <p style="margin-top: 30px; color: #888; font-size: 12px;">This link will expire in 7 days.</p>
       </div>
     `
-  };
-
-  return sendWithRetry(mailOptions);
+  });
 }
 
 export async function sendInviteEmail(toEmail, documentTitle, documentLink, sharedByName) {
@@ -103,9 +82,9 @@ export async function sendInviteEmail(toEmail, documentTitle, documentLink, shar
     throw new Error('Invalid email parameters');
   }
 
-  const mailOptions = {
+  return sendWithRetry({
     from: emailFrom,
-    to: toEmail,
+    to: [toEmail],
     subject: `${sharedByName} invited you to join CollabNotes`,
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -120,9 +99,7 @@ export async function sendInviteEmail(toEmail, documentTitle, documentLink, shar
         <p style="margin-top: 30px; color: #888; font-size: 12px;">Create your free account to access this document.</p>
       </div>
     `
-  };
-
-  return sendWithRetry(mailOptions);
+  });
 }
 
 export async function sendResetPasswordEmail(toEmail, resetLink) {
@@ -130,9 +107,9 @@ export async function sendResetPasswordEmail(toEmail, resetLink) {
     throw new Error('Invalid email parameters');
   }
 
-  const mailOptions = {
+  return sendWithRetry({
     from: emailFrom,
-    to: toEmail,
+    to: [toEmail],
     subject: 'Reset your CollabNotes password',
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -146,7 +123,5 @@ export async function sendResetPasswordEmail(toEmail, resetLink) {
         <p style="color: #888; font-size: 12px;">If you didn't request this, you can safely ignore this email.</p>
       </div>
     `
-  };
-
-  return sendWithRetry(mailOptions);
+  });
 }
