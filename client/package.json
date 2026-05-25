@@ -9,26 +9,30 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@tiptap/extension-collaboration": "^2.1.12",
-    "@tiptap/extension-collaboration-cursor": "^2.1.12",
-    "@tiptap/extension-placeholder": "^2.1.12",
-    "@tiptap/pm": "^2.1.12",
-    "@tiptap/react": "^2.1.12",
-    "@tiptap/starter-kit": "^2.1.12",
+    "@tiptap/extension-collaboration": "^2.11.5",
+    "@tiptap/extension-collaboration-cursor": "^2.11.5",
+    "@tiptap/extension-placeholder": "^2.11.5",
+    "@tiptap/pm": "^2.11.5",
+    "@tiptap/react": "^2.11.5",
+    "@tiptap/starter-kit": "^2.11.5",
     "axios": "^1.6.2",
-    "lucide-react": "^0.577.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "lucide-react": "^0.546.0",
+    "motion": "^12.23.24",
+    "react": "^19.0.1",
+    "react-dom": "^19.0.1",
     "react-hot-toast": "^2.4.1",
     "react-router-dom": "^6.21.0",
     "socket.io-client": "^4.7.2",
-    "y-websocket": "^1.5.0",
+    "y-websocket": "^2.0.3",
     "yjs": "^13.6.10"
   },
   "devDependencies": {
-    "@types/react": "^18.2.43",
-    "@types/react-dom": "^18.2.17",
+    "@tailwindcss/vite": "^4.1.14",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^4.2.1",
-    "vite": "^5.0.8"
+    "tailwindcss": "^4.1.14",
+    "typescript": "~5.8.2",
+    "vite": "^6.2.3"
   }
 }
