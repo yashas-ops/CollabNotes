@@ -1,11 +1,11 @@
 import { motion } from "motion/react";
-import { Layers, HelpCircle, GitFork, User, Settings, Sparkles, Home, LogOut } from "lucide-react";
-import { ActivePage, UserSession, ThemeType } from "../types";
+import { Layers, HelpCircle, GitFork, User, Settings, LogOut } from "lucide-react";
+import { ActivePage, ThemeType } from "../types";
 
 interface NavbarProps {
   activePage: ActivePage;
   setActivePage: (page: ActivePage) => void;
-  user: UserSession | null;
+  user: { _id: string; username: string; email: string } | null;
   logout: () => void;
   theme: ThemeType;
 }
@@ -102,16 +102,16 @@ export default function Navbar({ activePage, setActivePage, user, logout, theme 
                 className="hidden sm:flex flex-col items-end cursor-pointer"
                 onClick={() => setActivePage('dashboard')}
               >
-                <span className="text-xs font-semibold text-[#37352F] leading-none">{user.userName}</span>
+                <span className="text-xs font-semibold text-[#37352F] leading-none">{user.username}</span>
                 <span className="text-[10px] text-emerald-600 font-mono mt-0.5 leading-none font-semibold">Online</span>
               </div>
               <div 
                 className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm text-white shadow-md border border-black/5 select-none cursor-pointer"
-                style={{ backgroundColor: user.userColor }}
+                style={{ backgroundColor: '#6366f1' }}
                 onClick={() => setActivePage('dashboard')}
-                title={user.userName}
+                title={user.username}
               >
-                {user.userName.charAt(0).toUpperCase()}
+                {user.username.charAt(0).toUpperCase()}
               </div>
               <button
                 onClick={logout}
