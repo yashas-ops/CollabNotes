@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Toaster } from 'react-hot-toast'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import Navbar from './components/Navbar'
+import InteractiveBg from './components/InteractiveBg'
 import LandingPage from './components/Pages/LandingPage'
 import AboutPage from './components/Pages/AboutPage'
 import WorkflowPage from './components/Pages/WorkflowPage'
@@ -9,13 +10,17 @@ import AuthPage from './components/Pages/AuthPage'
 import DashboardPage from './components/Pages/DashboardPage'
 import CollaborativeEditor from './components/Pages/CollaborativeEditor'
 import SettingsPage from './components/Pages/SettingsPage'
-import { ActivePage, ThemeType } from './types'
+import { ActivePage, ThemeType, UserSession } from './types'
 
 function AppContent() {
   const { user, loading, logout } = useAuth()
   const [activePage, setActivePage] = useState<ActivePage>('landing')
   const [theme, setTheme] = useState<ThemeType>('cosmic-slate')
   const [selectedDocumentId, setSelectedDocumentId] = useState<string | null>(null)
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme)
+  }, [theme])
 
   useEffect(() => {
     if (!loading && user) {
@@ -51,19 +56,27 @@ function AppContent() {
     setActivePage('dashboard')
   }
 
+  const sessionUser: UserSession | null = user
+    ? { userId: user._id, userName: user.username, userColor: '#6366f1', email: user.email }
+    : null
+
+  const handleUpdateUser = (updated: UserSession) => {}
+
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--backdrop-bg)', color: 'var(--text-primary)' }}>
         <div className="flex flex-col items-center gap-4">
           <div className="w-8 h-8 border-2 border-brand-primary border-t-transparent rounded-full animate-spin" />
-          <span className="text-sm text-[#7A7A78] font-sans">Loading...</span>
+          <span className="text-sm font-sans">Loading...</span>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-white text-[#37352F] antialiased">
+    <div className="min-h-screen antialiased transition-all duration-750 ease-in-out" style={{ backgroundColor: 'var(--backdrop-bg)', color: 'var(--text-primary)' }}>
+      <InteractiveBg theme={theme} />
+
       <Navbar
         activePage={activePage}
         setActivePage={handlePageChange}
@@ -72,26 +85,39 @@ function AppContent() {
         theme={theme}
       />
 
-      {activePage === 'landing' && (
-        <LandingPage onGetStarted={() => handlePageChange('auth')} />
-      )}
-      {activePage === 'about' && <AboutPage />}
-      {activePage === 'workflow' && <WorkflowPage />}
-      {activePage === 'auth' && (
-        <AuthPage onSuccess={handleAuthSuccess} />
-      )}
-      {activePage === 'dashboard' && user && (
-        <DashboardPage onSelectNote={handleSelectNote} user={user} />
-      )}
-      {activePage === 'editor' && selectedDocumentId && (
-        <CollaborativeEditor
-          documentId={selectedDocumentId}
-          onBackToDashboard={handleBackToDashboard}
-        />
-      )}
-      {activePage === 'settings' && (
-        <SettingsPage theme={theme} setTheme={setTheme} />
-      )}
+      <div className="relative z-10">
+        {activePage === 'landing' && (
+          <LandingPage onGetStarted={() => handlePageChange('auth')} />
+        )}
+        {activePage === 'about' && <AboutPage />}
+        {activePage === 'workflow' && <WorkflowPage />}
+        {activePage === 'auth' && (
+          <AuthPage onSuccess={handleAuthSuccess} />
+        )}
+        {activePage === 'dashboard' && user && (
+          <DashboardPage onSelectNote={handleSelectNote} user={user} />
+        )}
+        {activePage === 'editor' && selectedDocumentId && (
+          <CollaborativeEditor
+            documentId={selectedDocumentId}
+            onBackToDashboard={handleBackToDashboard}
+          />
+        )}
+        {activePage === 'settings' && (
+          <SettingsPage
+            theme={theme}
+            setTheme={setTheme}
+            user={sessionUser}
+            onUpdateUser={handleUpdateUser}
+          />
+        )}
+      </div>
+
+      <footer className="relative z-10 text-center py-8 text-xs font-mono opacity-50">
+        <span style={{ color: 'var(--text-muted)' }}>
+          &copy; {new Date().getFullYear()} CollabNotes &mdash; Hyper-Sync Collaborative Editor
+        </span>
+      </footer>
     </div>
   )
 }
