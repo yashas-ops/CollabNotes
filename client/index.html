@@ -6,8 +6,12 @@
     <title>CollabNotes</title>
     <script>
       (function() {
-        var theme = localStorage.getItem('theme');
-        document.documentElement.setAttribute('data-theme', theme || 'minimalist-gray');
+        try {
+          var saved = localStorage.getItem('theme');
+          document.documentElement.setAttribute('data-theme', saved || 'minimalist-gray');
+        } catch(e) {
+          document.documentElement.setAttribute('data-theme', 'minimalist-gray');
+        }
       })();
     </script>
   </head>

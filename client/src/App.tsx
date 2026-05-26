@@ -16,18 +16,20 @@ function AppContent() {
   const { user, loading, logout } = useAuth()
   const [activePage, setActivePage] = useState<ActivePage>('landing')
   const [theme, setTheme] = useState<ThemeType>(() => {
-    return (localStorage.getItem('theme') as ThemeType) || 'minimalist-gray'
+    try {
+      return (localStorage.getItem('theme') as ThemeType) || 'minimalist-gray'
+    } catch {
+      return 'minimalist-gray'
+    }
   })
   const [selectedDocumentId, setSelectedDocumentId] = useState<string | null>(null)
   const prevUserRef = useRef(user)
-  const isFirstRender = useRef(true)
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme)
-    if (!isFirstRender.current) {
+    try {
       localStorage.setItem('theme', theme)
-    }
-    isFirstRender.current = false
+    } catch {}
   }, [theme])
 
   useEffect(() => {
