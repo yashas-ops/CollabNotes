@@ -64,7 +64,7 @@ export default function LandingPage({ onStartFree, onExploreWorkflow, onExploreA
               className="px-6 py-3.5 rounded-full bg-brand-primary text-white font-semibold text-sm shadow-lg shadow-brand-primary/15 hover:bg-brand-hover hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-2 group cursor-pointer border border-brand-primary/10"
               id="btn-hero-start"
             >
-              <span>Start for Free</span>
+              <span>Try Now</span>
               <ArrowRight className="w-4 h-4 text-white group-hover:translate-x-1 transition-transform" />
             </button>
 
@@ -127,7 +127,7 @@ export default function LandingPage({ onStartFree, onExploreWorkflow, onExploreA
           <div className="glass-card glass-card-hover rounded-[24px] p-6 text-left border-[#E9E9E8] shadow-sm flex flex-col justify-between group h-full">
             <div className="space-y-4">
               <div className="p-3 w-fit rounded-xl bg-brand-accent-bg border border-brand-accent-border text-brand-primary group-hover:scale-105 duration-300">
-                <Zap className="w-5 h-5 text-brand-primary" />
+                <Zap className="w-5 h-5 text-blue-500" />
                </div>
               <h3 className="font-display font-bold text-lg text-[#37352F]">Real-Time Sync Engine</h3>
               <p className="text-xs text-[#7A7A78] leading-relaxed font-sans">
@@ -136,7 +136,7 @@ export default function LandingPage({ onStartFree, onExploreWorkflow, onExploreA
             </div>
             <button 
               onClick={onExploreWorkflow} 
-              className="text-xs font-mono font-semibold text-brand-primary hover:text-brand-hover flex items-center gap-1 mt-6 group select-none cursor-pointer"
+              className="text-xs font-mono font-semibold text-blue-500 hover:text-blue-700 flex items-center gap-1 mt-6 group select-none cursor-pointer"
             >
               <span>View workflow map</span>
               <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />

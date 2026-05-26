@@ -7,12 +7,14 @@ export default function InteractiveLaptop() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [localMouse, setLocalMouse] = useState({ x: 120, y: 140 });
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handlePointerMove = (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
     if (!containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
+    const clientX = 'touches' in e ? e.touches[0].clientX : (e as React.MouseEvent).clientX;
+    const clientY = 'touches' in e ? e.touches[0].clientY : (e as React.MouseEvent).clientY;
     setLocalMouse({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
+      x: clientX - rect.left,
+      y: clientY - rect.top,
     });
   };
 
@@ -46,8 +48,10 @@ export default function InteractiveLaptop() {
         {/* Laptop Screen Inner Canvas */}
         <div 
           ref={containerRef}
-          onMouseMove={handleMouseMove}
+          onMouseMove={handlePointerMove}
+          onTouchMove={handlePointerMove}
           onMouseLeave={() => setHoveredLine(null)}
+          onTouchEnd={() => setHoveredLine(null)}
           className="relative flex-1 bg-[#09090b] p-4 sm:p-6 text-neutral-200 select-none overflow-hidden flex flex-col pt-6 font-sans"
         >
           {/* Editor Header Grid */}

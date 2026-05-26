@@ -31,14 +31,15 @@ export default function Navbar({ activePage, setActivePage, user, logout, theme 
           id="btn-home-logo"
         >
           <div className={`p-2 rounded-xl bg-gradient-to-tr ${getThemeText()} text-white shadow-md shadow-brand-primary/10 group-hover:scale-105 duration-300 flex items-center justify-center`}>
-            <Layers className="w-5 h-5 text-white" />
+            <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+              <line x1="3" y1="9" x2="21" y2="9" />
+              <line x1="9" y1="21" x2="9" y2="9" />
+            </svg>
           </div>
-          <div className="text-left hidden xs:block">
-            <span className="font-display font-bold text-lg leading-none block tracking-tight text-[#37352F] group-hover:text-black">
-              Collab<span className="font-bold text-brand-primary">Notes</span>
-            </span>
-            <span className="text-[10px] font-mono font-medium text-gray-400 block leading-none tracking-wider uppercase mt-0.5">
-              Hyper-Sync v1.0
+          <div className="text-left hidden sm:block">
+            <span className="font-sans font-bold text-2xl leading-none block tracking-tight text-[#37352F] group-hover:text-black">
+              Collab<span className="text-brand-primary">Notes</span>
             </span>
           </div>
         </button>

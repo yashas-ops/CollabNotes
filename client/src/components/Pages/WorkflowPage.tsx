@@ -1,16 +1,14 @@
 import { useState } from "react";
-import { Send, Server, Network, ShieldCheck, Cpu, Code, Info, Play, Check } from "lucide-react";
+import { Server, Cpu, Info, Play, HelpCircle, Wifi, Users, Database, Workflow, Lock } from "lucide-react";
 
 export default function WorkflowPage() {
   const [activeStep, setActiveStep] = useState<number>(1);
   const [pulseActive, setPulseActive] = useState<boolean>(false);
-  const [selectedSchema, setSelectedSchema] = useState<'edit' | 'presence' | 'cursor'>('edit');
 
   const triggerPulse = () => {
     if (pulseActive) return;
     setPulseActive(true);
     
-    // Cycle active steps to animate the packet transfer
     const steps = [1, 2, 3, 4];
     steps.forEach((step, i) => {
       setTimeout(() => {
@@ -22,35 +20,6 @@ export default function WorkflowPage() {
         }
       }, i * 600);
     });
-  };
-
-  const schemaPayloads = {
-    edit: {
-      type: "edit",
-      noteId: "launch-specs",
-      content: "# 🚀 CollabNotes Launch Specs\n- [x] High-performance WebSockets",
-      userId: "usr-guest-102",
-      userName: "Alex Glass",
-      timestamp: Date.now()
-    },
-    presence: {
-      type: "presence",
-      noteId: "launch-specs",
-      users: [
-        { userId: "usr-01", userName: "Alex", userColor: "#2383E2", x: 120, y: 80 },
-        { userId: "usr-02", userName: "Sarah", userColor: "#10B981", x: 230, y: 150 }
-      ]
-    },
-    cursor: {
-      type: "cursor_move",
-      userId: "usr-guest-102",
-      userName: "Alex Glass",
-      userColor: "#a855f7",
-      x: 185,
-      y: 112,
-      lineIndex: 2,
-      charIndex: 12
-    }
   };
 
   return (
@@ -200,53 +169,135 @@ export default function WorkflowPage() {
 
         </div>
 
-        {/* Schema payload list and Terminal representation */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 pb-6">
+        {/* Application Workflow & Tech Stack */}
+        <div className="space-y-8 pb-6">
           
-          {/* Schema selections (4 cols) */}
-          <div className="md:col-span-4 flex flex-col gap-3">
-            <span className="text-xs font-mono font-bold text-[#7A7A78] tracking-wider">SCHEMAS</span>
-            
-            {[
-              { id: 'edit', label: 'edit', desc: 'Sync text deltas' },
-              { id: 'presence', label: 'presence', desc: 'Sync joined user pools' },
-              { id: 'cursor', label: 'cursor_move', desc: 'Broadcasting mouse location' },
-            ].map((item) => (
-              <button
-                key={item.id}
-                onClick={() => setSelectedSchema(item.id as any)}
-                className={`p-4 rounded-xl text-left transition-all hover:bg-[#F7F6F3] border text-xs cursor-pointer ${
-                  selectedSchema === item.id 
-                    ? 'bg-brand-accent-bg border border-brand-accent-border shadow-sm font-semibold' 
-                    : 'bg-white border-[#E9E9E8]'
-                }`}
-              >
-                <div className="flex items-center gap-2">
-                  <span className={`w-1.5 h-1.5 rounded-full ${
-                    selectedSchema === item.id ? 'bg-brand-primary' : 'bg-gray-400'
-                  }`} />
-                  <span className="font-mono font-bold text-[#37352F]">{item.label}</span>
-                </div>
-                <p className="text-[10px] text-[#7A7A78] mt-1 font-sans">{item.desc}</p>
-              </button>
-            ))}
+          {/* Section Header */}
+          <div className="space-y-3">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-accent-bg border border-brand-accent-border text-xs text-brand-primary font-mono font-medium">
+              <Cpu className="w-3.5 h-3.5" />
+              <span>Application Flow & Stack</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-display font-bold text-[#37352F] tracking-tight">
+              How CollabNotes Works
+            </h2>
+            <p className="text-xs sm:text-sm text-[#7A7A78] max-w-2xl leading-relaxed">
+              From authentication to real-time sync, here's the full lifecycle of a collaborative session.
+            </p>
           </div>
 
-          {/* Code Schema display (8 cols) */}
-          <div className="md:col-span-8 glass-card rounded-[24px] overflow-hidden border-[#E9E9E8] flex flex-col h-[280px] shadow-sm bg-white">
-            {/* Terminal Top bar */}
-            <div className="px-4 py-2 bg-[#F7F6F3] flex items-center justify-between border-b border-[#E9E9E8]">
-              <span className="text-[10px] font-mono text-[#7A7A78] font-semibold">WebSocket JSON Message Format</span>
-              <div className="flex items-center gap-1">
-                <span className="w-2 h-2 rounded-full bg-red-400" />
-                <span className="w-2 h-2 rounded-full bg-yellow-400" />
-                <span className="w-2 h-2 rounded-full bg-green-400" />
+          {/* Workflow Steps */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {[
+              { step: 1, icon: HelpCircle, title: 'Authentication', desc: 'Users register or login via JWT-based auth. Tokens persist in localStorage for 7 days. Every API request carries the token in Authorization headers.', color: 'text-brand-primary', border: 'border-brand-primary/35' },
+              { step: 2, icon: Server, title: 'Document Management', desc: 'Authenticated users create, list, and open documents. Each document is stored in MongoDB with Yjs binary state. Owners can invite collaborators with view or edit permissions.', color: 'text-teal-600', border: 'border-teal-500/35' },
+              { step: 3, icon: Wifi, title: 'Real-Time Session', desc: 'Opening a document establishes a WebSocket connection via Socket.io. The client joins a room (document:{id}) and initializes a Yjs document. All edits produce CRDT-based sync-update events broadcast to the room.', color: 'text-amber-600', border: 'border-amber-500/35' },
+              { step: 4, icon: Users, title: 'Collaboration & Persistence', desc: 'Collaborators see live cursors, presence indicators, and receive instant deltas. The server auto-saves the Yjs state to MongoDB every 1000ms. Version snapshots are taken and capped at 50 per document.', color: 'text-purple-600', border: 'border-purple-500/35' },
+            ].map((item) => {
+              const IconComponent = item.icon;
+              return (
+                <div key={item.step} className={`glass-card rounded-[20px] p-5 border-[#E9E9E8] space-y-3`}>
+                  <div className="flex items-center gap-3">
+                    <span className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm ${item.color}`}>
+                      <IconComponent className="w-4 h-4" />
+                    </span>
+                    <div>
+                      <span className="text-[10px] font-mono font-bold text-[#7A7A78] uppercase">Step {item.step}</span>
+                      <h3 className="font-display font-bold text-sm text-[#37352F]">{item.title}</h3>
+                    </div>
+                  </div>
+                  <p className="text-xs text-[#7A7A78] leading-relaxed pl-1">
+                    {item.desc}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Tech Stack Summary */}
+          <div className="glass-card rounded-[24px] p-6 border-[#E9E9E8]">
+            <div className="flex items-center gap-2 mb-4 text-xs font-mono font-bold text-brand-primary">
+              <Cpu className="w-4 h-4" />
+              <span>TECHNOLOGY STACK</span>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {[
+                { label: 'React 19', sub: 'UI Framework', color: 'text-brand-primary' },
+                { label: 'TypeScript', sub: 'Type Safety', color: 'text-brand-primary' },
+                { label: 'Tailwind CSS v4', sub: 'Styling', color: 'text-teal-600' },
+                { label: 'Vite', sub: 'Bundler', color: 'text-teal-600' },
+                { label: 'Node.js + Express', sub: 'API Server', color: 'text-amber-600' },
+                { label: 'Socket.io', sub: 'WebSocket', color: 'text-amber-600' },
+                { label: 'MongoDB + Mongoose', sub: 'Database', color: 'text-purple-600' },
+                { label: 'Yjs', sub: 'CRDT Engine', color: 'text-purple-600' },
+              ].map((tech) => (
+                <div key={tech.label} className="p-3 rounded-xl bg-[#F7F6F3] border border-[#E9E9E8]">
+                  <span className={`block text-xs font-bold ${tech.color}`}>{tech.label}</span>
+                  <span className="block text-[10px] text-[#7A7A78] font-mono mt-0.5">{tech.sub}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Sync Pipeline Architecture */}
+          <div className="glass-card rounded-[24px] p-6 border-[#E9E9E8] space-y-4">
+            <div className="flex items-center gap-2 text-xs font-mono font-bold text-teal-600">
+              <Workflow className="w-4 h-4" />
+              <span>SYNC PIPELINE</span>
+            </div>
+            <h3 className="font-display font-bold text-lg text-[#37352F]">End-to-End Data Flow</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+              <div className="p-4 rounded-xl bg-[#F7F6F3] border border-[#E9E9E8] space-y-2">
+                <div className="flex items-center gap-2 text-brand-primary">
+                  <Wifi className="w-4 h-4" />
+                  <span className="text-xs font-bold text-[#37352F]">1. Capture</span>
+                </div>
+                <p className="text-[11px] text-[#7A7A78] leading-relaxed font-sans">
+                  Keystrokes and cursor movements are captured by the Yjs document binding. Each event produces a granular delta operation that encodes only what changed.
+                </p>
+              </div>
+              <div className="p-4 rounded-xl bg-[#F7F6F3] border border-[#E9E9E8] space-y-2">
+                <div className="flex items-center gap-2 text-amber-600">
+                  <Server className="w-4 h-4" />
+                  <span className="text-xs font-bold text-[#37352F]">2. Broadcast</span>
+                </div>
+                <p className="text-[11px] text-[#7A7A78] leading-relaxed font-sans">
+                  Deltas are sent via WebSocket to the server, which identifies the document room and broadcasts the update to all other connected clients in that room.
+                </p>
+              </div>
+              <div className="p-4 rounded-xl bg-[#F7F6F3] border border-[#E9E9E8] space-y-2">
+                <div className="flex items-center gap-2 text-purple-600">
+                  <Database className="w-4 h-4" />
+                  <span className="text-xs font-bold text-[#37352F]">3. Persist</span>
+                </div>
+                <p className="text-[11px] text-[#7A7A78] leading-relaxed font-sans">
+                  The server debounces persistence to MongoDB every 1000ms. Document state is stored as Yjs binary, enabling full history reconstruction and version rollback.
+                </p>
               </div>
             </div>
-            
-            {/* Actual code details */}
-            <div className="p-4 bg-white flex-1 overflow-auto font-mono text-xs text-brand-text text-left leading-relaxed">
-              <pre>{JSON.stringify(schemaPayloads[selectedSchema], null, 2)}</pre>
+          </div>
+
+          {/* Security & Permissions */}
+          <div className="glass-card rounded-[24px] p-6 border-[#E9E9E8] space-y-4">
+            <div className="flex items-center gap-2 text-xs font-mono font-bold text-amber-600">
+              <Lock className="w-4 h-4" />
+              <span>ACCESS CONTROL</span>
+            </div>
+            <h3 className="font-display font-bold text-lg text-[#37352F]">Permission Model</h3>
+            <p className="text-xs text-[#7A7A78] leading-relaxed max-w-3xl">
+              Document owners can invite collaborators with granular permissions. Viewers can see content in real-time but cannot edit. Editors have full write access with their changes synced via CRDT merging. Room isolation prevents cross-document data leakage.
+            </p>
+            <div className="flex flex-wrap gap-3 pt-1">
+              {[
+                { role: 'Owner', perms: 'Full control — delete, share, edit, view history', color: 'text-brand-primary border-brand-primary/35' },
+                { role: 'Editor', perms: 'Read and write — changes sync to all', color: 'text-teal-600 border-teal-500/35' },
+                { role: 'Viewer', perms: 'Read-only — live cursor following', color: 'text-amber-600 border-amber-500/35' },
+              ].map((r) => (
+                <div key={r.role} className={`flex-1 min-w-[140px] p-3 rounded-xl bg-[#F7F6F3] border border-[#E9E9E8]`}>
+                  <span className={`block text-xs font-bold ${r.color.split(' ')[0]}`}>{r.role}</span>
+                  <span className="block text-[10px] text-[#7A7A78] font-sans mt-1">{r.perms}</span>
+                </div>
+              ))}
             </div>
           </div>
 

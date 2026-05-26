@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Toaster } from 'react-hot-toast'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import Navbar from './components/Navbar'
@@ -15,19 +15,32 @@ import { ActivePage, ThemeType, UserSession } from './types'
 function AppContent() {
   const { user, loading, logout } = useAuth()
   const [activePage, setActivePage] = useState<ActivePage>('landing')
-  const [theme, setTheme] = useState<ThemeType>('cosmic-slate')
+  const [theme, setTheme] = useState<ThemeType>(() => {
+    return (localStorage.getItem('theme') as ThemeType) || 'minimalist-gray'
+  })
   const [selectedDocumentId, setSelectedDocumentId] = useState<string | null>(null)
+  const prevUserRef = useRef(user)
+  const isFirstRender = useRef(true)
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme)
+    if (!isFirstRender.current) {
+      localStorage.setItem('theme', theme)
+    }
+    isFirstRender.current = false
   }, [theme])
 
   useEffect(() => {
-    if (!loading && user) {
-      if (activePage === 'landing' || activePage === 'auth') {
-        setActivePage('dashboard')
+    if (!loading) {
+      if (user) {
+        if (activePage === 'landing' || activePage === 'auth') {
+          setActivePage('dashboard')
+        }
+      } else if (prevUserRef.current) {
+        setActivePage('auth')
       }
     }
+    prevUserRef.current = user
   }, [user, loading])
 
   const handlePageChange = (page: ActivePage) => {
@@ -87,7 +100,7 @@ function AppContent() {
 
       <div className="relative z-10">
         {activePage === 'landing' && (
-          <LandingPage onGetStarted={() => handlePageChange('auth')} />
+          <LandingPage onStartFree={() => handlePageChange('auth')} onExploreWorkflow={() => handlePageChange('workflow')} onExploreAbout={() => handlePageChange('about')} />
         )}
         {activePage === 'about' && <AboutPage />}
         {activePage === 'workflow' && <WorkflowPage />}

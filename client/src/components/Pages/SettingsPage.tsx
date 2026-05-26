@@ -16,10 +16,10 @@ export default function SettingsPage({ theme, setTheme, user, onUpdateUser }: Se
   const colors = ["#2383E2", "#06B6D4", "#10B981", "#F59E0B", "#A855F7", "#EC4899"];
 
   const themes: { id: ThemeType; name: string; desc: string; colors: string }[] = [
-    { id: 'cosmic-slate', name: 'Cosmic Slate (Default)', desc: 'Obisidian space dark canvas with vibrant electric indigo gradients', colors: 'from-indigo-900 to-indigo-400' },
+    { id: 'cosmic-slate', name: 'Cosmic Slate', desc: 'Obisidian space dark canvas with vibrant electric indigo gradients', colors: 'from-indigo-900 to-indigo-400' },
     { id: 'amber-sunset', name: 'Amber Sunset', desc: 'Sleek copper-obsidian sheets with warm sunset neon highlights', colors: 'from-orange-950 to-orange-500' },
     { id: 'ocean-breeze', name: 'Ocean Breeze', desc: 'Abyssal teal canvas styled with radiant cyan laser strokes', colors: 'from-cyan-950 to-cyan-400' },
-    { id: 'minimalist-gray', name: 'Minimalist Charcoal', desc: 'Sophisticated monochromatic dark slate with silver metallic outlines', colors: 'from-neutral-900 to-neutral-400' },
+    { id: 'minimalist-gray', name: 'Minimalist Charcoal (Default)', desc: 'Sophisticated monochromatic dark slate with silver metallic outlines', colors: 'from-neutral-900 to-neutral-400' },
   ];
 
   const handleUpdate = (e: React.FormEvent) => {
