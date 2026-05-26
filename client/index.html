@@ -7,8 +7,15 @@
     <script>
       (function() {
         try {
-          var saved = localStorage.getItem('theme');
-          document.documentElement.setAttribute('data-theme', saved || 'minimalist-gray');
+          var version = localStorage.getItem('theme-version');
+          if (!version) {
+            localStorage.setItem('theme', 'minimalist-gray');
+            localStorage.setItem('theme-version', '1');
+            document.documentElement.setAttribute('data-theme', 'minimalist-gray');
+          } else {
+            var saved = localStorage.getItem('theme');
+            document.documentElement.setAttribute('data-theme', saved || 'minimalist-gray');
+          }
         } catch(e) {
           document.documentElement.setAttribute('data-theme', 'minimalist-gray');
         }

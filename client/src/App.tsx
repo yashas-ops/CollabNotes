@@ -17,6 +17,12 @@ function AppContent() {
   const [activePage, setActivePage] = useState<ActivePage>('landing')
   const [theme, setTheme] = useState<ThemeType>(() => {
     try {
+      const version = localStorage.getItem('theme-version')
+      if (!version) {
+        localStorage.setItem('theme', 'minimalist-gray')
+        localStorage.setItem('theme-version', '1')
+        return 'minimalist-gray'
+      }
       return (localStorage.getItem('theme') as ThemeType) || 'minimalist-gray'
     } catch {
       return 'minimalist-gray'
