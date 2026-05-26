@@ -37,10 +37,10 @@ export default function InteractiveLaptop() {
   return (
     <div className="relative w-full max-w-2xl mx-auto py-6">
       {/* Laptop Screen Body */}
-      <div className="relative mx-auto w-[90%] sm:w-[540px] md:w-[600px] h-[280px] sm:h-[320px] bg-neutral-900 border-[10px] sm:border-[14px] border-neutral-800 rounded-t-[20px] shadow-2xl flex flex-col overflow-hidden">
+      <div className="relative mx-auto w-[90%] sm:w-[540px] md:w-[600px] h-[280px] sm:h-[320px] bg-neutral-900 border-[10px] sm:border-[14px] rounded-t-[20px] shadow-2xl flex flex-col overflow-hidden" style={{ borderColor: 'var(--laptop-shell)' }}>
         
         {/* Notch & Camera */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-28 h-4 bg-neutral-800 rounded-b-md z-30 flex items-center justify-center gap-1.5">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-28 h-4 rounded-b-md z-30 flex items-center justify-center gap-1.5" style={{ backgroundColor: 'var(--laptop-notch)' }}>
           <div className="w-1.5 h-1.5 rounded-full bg-neutral-900 border border-neutral-700" />
           <div className="w-1 h-1 rounded-full bg-blue-500/80" />
         </div>
@@ -147,13 +147,13 @@ export default function InteractiveLaptop() {
       </div>
 
       {/* Laptop Bottom Plate & hinge */}
-      <div className="relative mx-auto w-[100%] sm:w-[600px] md:w-[660px] h-[16px] bg-neutral-800 rounded-b-[10px] shadow-lg border-t border-neutral-700 flex justify-center items-start">
+      <div className="relative mx-auto w-[100%] sm:w-[600px] md:w-[660px] h-[16px] rounded-b-[10px] shadow-lg border-t flex justify-center items-start" style={{ backgroundColor: 'var(--laptop-base)', borderColor: 'var(--laptop-base-border)' }}>
         {/* Display notch open grip */}
         <div className="w-[12%] h-[5px] bg-neutral-900 rounded-b-[4px]" />
       </div>
 
       {/* Under-glow ambient dynamic shadow ring */}
-      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-[85%] h-5 bg-indigo-500/10 rounded-full blur-xl pointer-events-none" />
+      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-[85%] h-5 rounded-full blur-xl pointer-events-none" style={{ backgroundColor: 'rgba(var(--laptop-glow), 0.1)' }} />
     </div>
   );
 }

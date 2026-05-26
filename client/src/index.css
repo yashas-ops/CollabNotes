@@ -24,6 +24,12 @@
   --text-muted: #94A3B8;
   --text-header: #FFFFFF;
   --border-muted: rgba(255, 255, 255, 0.08);
+
+  --laptop-shell: #262626;
+  --laptop-base: #262626;
+  --laptop-notch: #262626;
+  --laptop-base-border: #404040;
+  --laptop-glow: 99, 102, 241;
 }
 
 [data-theme='amber-sunset'] {
@@ -49,6 +55,12 @@
   --text-muted: #FDBA74;
   --text-header: #FFFFFF;
   --border-muted: rgba(255, 255, 255, 0.07);
+
+  --laptop-shell: #262626;
+  --laptop-base: #262626;
+  --laptop-notch: #262626;
+  --laptop-base-border: #404040;
+  --laptop-glow: 255, 122, 0;
 }
 
 [data-theme='ocean-breeze'] {
@@ -74,6 +86,12 @@
   --text-muted: #7DD3FC;
   --text-header: #FFFFFF;
   --border-muted: rgba(255, 255, 255, 0.07);
+
+  --laptop-shell: #262626;
+  --laptop-base: #262626;
+  --laptop-notch: #262626;
+  --laptop-base-border: #404040;
+  --laptop-glow: 56, 189, 248;
 }
 
 [data-theme='minimalist-gray'] {
@@ -99,6 +117,12 @@
   --text-muted: #9CA3AF;
   --text-header: #FFFFFF;
   --border-muted: rgba(255, 255, 255, 0.06);
+
+  --laptop-shell: #d4d4d4;
+  --laptop-base: #525252;
+  --laptop-notch: #a3a3a3;
+  --laptop-base-border: #525252;
+  --laptop-glow: 156, 163, 175;
 }
 
 @theme {
